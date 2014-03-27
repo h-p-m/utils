@@ -6,16 +6,19 @@
 
 $IN = "data.dat";
 $OUT = ">data_mod.dat";
+$header_written  = 0;
 
-$factor1 = 1/120;
-$factor2 = 1/100;
+($factor1, $factor2) = @ARGV;
+
+#$factor1 = 1/120;
+#$factor2 = 1/100;
 
 open IN or die "Datei $IN der Daten $! nicht gefunden\n";
 open OUT or die "Die Datei $OUT kann nisht angelegt werden\n";
 
 while (<IN>) {
 	chop;
-	if (/^#/) { 
+	if (/^#/ and not $header_written) { 
 		#
 		# modify header and add scaling factors
 		#
@@ -25,6 +28,7 @@ while (<IN>) {
 		print OUT "# modified by scale_data.pl\n";
 		print OUT "# scaled by $factor1 and $factor2\n";
 		print OUT "#\n";
+		$header_written = 1;
 	} else {
 		#
 		# scale values
